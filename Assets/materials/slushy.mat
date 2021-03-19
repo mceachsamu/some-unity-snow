@@ -68,7 +68,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _AmbientAmount: 0.258
+    - _AmbientAmount: 0.392
     - _BackLightingAmount: 0.751
     - _BackLightingNormalAmount: 0.556
     - _BumpScale: 1
@@ -77,14 +77,15 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 1.89
+    - _Glossiness: 1.96
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
     - _NormalMapAmount: 0.366
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Power: 2.18
+    - _Power: 5
+    - _RimAmount: 1
     - _Scale: 1.27
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -101,7 +102,8 @@ Material:
     - _MeshDimensions: {r: 0, g: 0, b: 0, a: 0}
     - _PlayerPosition: {r: 0, g: 0, b: 0, a: 0}
     - _RenderTextureDimensions: {r: 0, g: 0, b: 0, a: 0}
-    - _SpecularColor: {r: 0.9103774, g: 0.9284643, b: 1, a: 1}
+    - _RimColor: {r: 0.3490566, g: 0.3490566, b: 0.3490566, a: 1}
+    - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _TextureDimensions: {r: 0, g: 0, b: 0, a: 0}
-    - _UnderColor: {r: 0.0065491516, g: 0, b: 0.2264151, a: 1}
+    - _UnderColor: {r: 0.103773594, g: 0.06624561, b: 0, a: 1}
   m_BuildTextureStacks: []

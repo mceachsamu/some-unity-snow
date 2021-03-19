@@ -84,7 +84,7 @@ public class snow : MonoBehaviour
                 c.r = other.GetPixel(i, j).r;
 
                 Color currentPix = imprint.GetPixel(indexX, indexY);
-                currentPix.r += c.r/30.0f;
+                currentPix.r += c.r/100.0f;
 
                 imprint.SetPixel(indexX, indexY, currentPix);
             }

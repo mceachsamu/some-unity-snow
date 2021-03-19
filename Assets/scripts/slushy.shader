@@ -7,9 +7,11 @@
         _AmbientColor("Ambient Color", Color) = (0.0,0.0,0.0,0.0)
         _AmbientAmount("Ambient amount", Range(0.0,1.0)) = 0.0
         _SpecularColor("Specular Color", Color) = (0.0,0.0,0.0,1)
+        _RimColor("rim Color", Color) = (0.0,0.0,0.0,1)
         _UnderColor("Under Color", Color) = (0.0,0.0,0.0,1)
         _Glossiness("Glossiness", Range(0, 5)) = 1
         _BackLightingNormalAmount("Back lighting", Range(0.0,1.0)) = 0.5
+        _RimAmount("rim amount", Range(0.0,20.0)) = 1.0
         _Power("power", Range(0.0,5.0)) = 1
         _Scale("scale", Range(0.0,5.0)) = 1
         _Bumps("bumps", Range(0.0,1.0)) = 0.5
@@ -61,9 +63,11 @@
             uniform float4 _Color;
             uniform float _Glossiness;
             uniform float4 _SpecularColor;
+            uniform float4 _RimColor;
             uniform float4 _UnderColor;
             uniform float4 _AmbientColor;
             uniform float _AmbientAmount;
+            uniform float _RimAmount;
             uniform float _BackLightingNormalAmount;
             uniform float _Power;
             uniform float _Scale;
@@ -111,7 +115,7 @@
 
                 o.uv2 = TRANSFORM_TEX(v.texcoord, _ImprintTexture);
                 float4 height = tex2Dlod (_ImprintTexture, float4(float2(o.uv2.x, o.uv2.y),0,0));
-                v.vertex.y += height.r/1000.0;
+                v.vertex.z -= height.r/1000.0;
 
                 float4 step = 0.01;//(_MeshDimensions) / _TextureDimensions;
                 float3 norm = normalize(getNormal(step, o.uv2, _ImprintTexture, 0.01));
@@ -161,6 +165,9 @@
                 float NdotH = dot(normalize(worldNormal), H);
                 float specIntensity = saturate(pow(NdotH, _Glossiness * _Glossiness));
 
+                float rimDot = clamp((1.0 - dot(normalize(i.viewDir), normalize(i.wNormal))),-50.0,50.0);
+                float rim = pow(rimDot,_RimAmount);
+
                 float3 FragToLight = lightDir;
 
                 float3 HB = FragToLight + worldNormal * _BackLightingNormalAmount;
@@ -174,7 +181,7 @@
 
                 float4 imprint = tex2D(_ImprintTexture, i.uv2);
 
-                float4 shading = _AmbientAmount * _AmbientColor + _LightColor0 * backLighting * _Color + _Color * NdotL + specIntensity * _SpecularColor;
+                float4 shading = _AmbientAmount * _AmbientColor + _LightColor0 * backLighting * _Color + _Color * NdotL + specIntensity * _SpecularColor + rim * _RimColor;
 
                 shading += _UnderColor * i.customerDat.r;
                 return shading;// - imprint*2.0;
