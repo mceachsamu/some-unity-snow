@@ -1,4 +1,4 @@
-﻿Shader "Unlit/slushy"
+﻿    Shader "Unlit/slushy"
 {
     Properties
     {
@@ -115,7 +115,7 @@
 
                 o.uv2 = TRANSFORM_TEX(v.texcoord, _ImprintTexture);
                 float4 height = tex2Dlod (_ImprintTexture, float4(float2(o.uv2.x, o.uv2.y),0,0));
-                v.vertex.z -= height.r/1000.0;
+                v.vertex.z -= height.r/5000.0;
 
                 float4 step = 0.01;//(_MeshDimensions) / _TextureDimensions;
                 float3 norm = normalize(getNormal(step, o.uv2, _ImprintTexture, 0.01));
@@ -183,7 +183,7 @@
 
                 float4 shading = _AmbientAmount * _AmbientColor + _LightColor0 * backLighting * _Color + _Color * NdotL + specIntensity * _SpecularColor + rim * _RimColor;
 
-                shading += _UnderColor * i.customerDat.r;
+                // shading += _UnderColor * i.customerDat.r;
                 return shading;// - imprint*2.0;
             }
             ENDCG

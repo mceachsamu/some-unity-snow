@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: slushy
-  m_Shader: {fileID: 4800000, guid: 265b0a1390be74f87a13b51c89f1c05c, type: 3}
+  m_Name: SnowLightCoverB_N
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -39,20 +39,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _ImprintTexture:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 1cef2545def4844d4800a8603d284e44, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: 1cef2545def4844d4800a8603d284e44, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -63,47 +55,24 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _RenderTexture:
-        m_Texture: {fileID: 8400000, guid: 9cca8570dda684d5ebfe5614040c6cdb, type: 2}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _AmbientAmount: 0.407
-    - _BackLightingAmount: 0.751
-    - _BackLightingNormalAmount: 0.556
     - _BumpScale: 1
-    - _Bumps: 0.642
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 2.79
+    - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
-    - _NormalMapAmount: 0.366
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Power: 5
-    - _RimAmount: 2.2
-    - _Scale: 1.27
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
-    - _UseNormalMap: 1
     - _ZWrite: 1
     m_Colors:
-    - _AmbientColor: {r: 1, g: 0.5902527, b: 0, a: 1}
-    - _Color: {r: 1, g: 0.3055224, b: 0, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ImprintTextureDimemsions: {r: 0, g: 0, b: 0, a: 0}
-    - _MaxPosition: {r: 0, g: 0, b: 0, a: 0}
-    - _MeshDimensions: {r: 0, g: 0, b: 0, a: 0}
-    - _PlayerPosition: {r: 0, g: 0, b: 0, a: 0}
-    - _RenderTextureDimensions: {r: 0, g: 0, b: 0, a: 0}
-    - _RimColor: {r: 1, g: 0.85255754, b: 0.66415095, a: 1}
-    - _SpecularColor: {r: 1, g: 0.5727131, b: 0, a: 1}
-    - _TextureDimensions: {r: 0, g: 0, b: 0, a: 0}
-    - _UnderColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
