@@ -115,7 +115,7 @@
 
                 o.uv2 = TRANSFORM_TEX(v.texcoord, _ImprintTexture);
                 float4 height = tex2Dlod (_ImprintTexture, float4(float2(o.uv2.x, o.uv2.y),0,0));
-                v.vertex.z -= height.r/5000.0;
+                v.vertex.z -= height.r/7000.0;
 
                 float4 step = 0.01;//(_MeshDimensions) / _TextureDimensions;
                 float3 norm = normalize(getNormal(step, o.uv2, _ImprintTexture, 0.01));
@@ -144,7 +144,7 @@
 
                 half2 uv_NormalMap = TRANSFORM_TEX (i.uv, _NormalMap);
 
-                half3 tnormal = UnpackNormal(tex2D(_NormalMap, uv_NormalMap * 8.0));
+                half3 tnormal = UnpackNormal(tex2D(_NormalMap, uv_NormalMap * 12.0));
                  // transform normal from tangent to world space
                 half3 worldNormal;
                 worldNormal.x = dot(i.tspace0, tnormal);
