@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,8 +27,6 @@ public class snow : MonoBehaviour
         maxBounds.z = maxBounds.y;
         max = maxBounds;
 
-        print(maxBounds.x + " " + maxBounds.y + " " + maxBounds.z);
-
         imprint = new Texture2D((int)maxBounds.x * textureSizeMultiplier, (int)maxBounds.z * textureSizeMultiplier);
         for (int i = 0; i < imprint.width; i++)
         {
@@ -38,10 +36,67 @@ public class snow : MonoBehaviour
         }
         imprint.Apply();
 
+        LoadMeshIntoMatrix(m);
 
         this.GetComponent<Renderer>().material.SetVector("_MeshDimensions", max);
         this.GetComponent<Renderer>().material.SetVector("_TextureDimensions", new Vector3(imprint.width, imprint.height, imprint.height));
     }
+
+    private Vector4[][] LoadMeshIntoMatrix(Mesh mesh) {
+        
+        List<List<Vector4>> output = new List<List<Vector4>>();
+        
+        Vector3[] vertices = mesh.vertices;
+        int xi = 0;
+        int yi = 0;
+        int numAdded = 0;
+        int totalToAdd = vertices.Length;
+        float previousDiff = vertices[0].x;
+
+        while (numAdded < totalToAdd) {
+            //get max z (y since blender meshes be weird) and x
+            float maxX = float.NegativeInfinity;
+            int maxIndex = -1;
+            float maxY = float.NegativeInfinity;
+            Vector3 maxPosition = new Vector3(float.NegativeInfinity, float.NegativeInfinity, 0.0f);
+            for (int i = 0; i < vertices.Length; i++){
+                if (maxPosition.x < vertices[i].x && maxPosition.y < vertices[i].y) {
+                    maxPosition.x = vertices[i].x;
+                    maxPosition.y = vertices[i].y;
+                    maxIndex = i;
+                }
+            }
+            if (Mathf.Abs(maxPosition.x - previousDiff) >= mesh.bounds.max.x) {
+                xi++;
+                yi=0;
+            }
+            // print(Mathf.Abs(maxPosition.x - previousDiff) + " ---- " + mesh.bounds.max.x);
+            print(xi + " " + yi);
+            previousDiff = maxPosition.x;
+            SetIndex(output, xi, yi, new Vector4(maxPosition.x, maxPosition.y, maxPosition.z, maxIndex));
+            vertices[maxIndex] = new Vector3(float.NegativeInfinity,float.NegativeInfinity,float.NegativeInfinity);
+            numAdded++;
+            yi++;
+        }
+        
+        return null;
+    }
+
+    private Vector4 GetIndex(List<List<Vector4>> list, int x, int y) {
+        List<Vector4> xList = list.ToArray()[x];
+        Vector4 val = xList.ToArray()[y];
+        return val;
+    }
+
+    private void SetIndex(List<List<Vector4>> list, int x, int y, Vector4 value) {
+        if (list.Count <= x) {
+            list.Add(new List<Vector4>());
+        }
+        List<Vector4> yList = list.ToArray()[x];
+        yList.Add(value);
+    }
+
+
 
     // Update is called once per frame
     void Update()
