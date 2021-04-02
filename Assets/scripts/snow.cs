@@ -51,7 +51,7 @@ public class snow : MonoBehaviour
         int yi = 0;
         int numAdded = 0;
         int totalToAdd = vertices.Length;
-        float previousDiff = vertices[0].x;
+        float previousMaxY = vertices[0].y;
 
         while (numAdded < totalToAdd) {
             //get max z (y since blender meshes be weird) and x
@@ -60,19 +60,25 @@ public class snow : MonoBehaviour
             float maxY = float.NegativeInfinity;
             Vector3 maxPosition = new Vector3(float.NegativeInfinity, float.NegativeInfinity, 0.0f);
             for (int i = 0; i < vertices.Length; i++){
-                if (maxPosition.x < vertices[i].x && maxPosition.y < vertices[i].y) {
+                if (maxPosition.x < vertices[i].x) {
+                    maxPosition.x = vertices[i].x;
+                    maxPosition.y = vertices[i].y;
+                    maxIndex = i;
+                }
+                if (maxPosition.x <= vertices[i].x && maxPosition.y <= vertices[i].y) {
                     maxPosition.x = vertices[i].x;
                     maxPosition.y = vertices[i].y;
                     maxIndex = i;
                 }
             }
-            if (Mathf.Abs(maxPosition.x - previousDiff) >= mesh.bounds.max.x) {
+            float diff = Mathf.Abs(maxPosition.y - previousMaxY);
+            if (diff >= mesh.bounds.max.x) {
                 xi++;
                 yi=0;
             }
-            // print(Mathf.Abs(maxPosition.x - previousDiff) + " ---- " + mesh.bounds.max.x);
-            print(xi + " " + yi);
-            previousDiff = maxPosition.x;
+            print(maxPosition.x + " " + maxPosition.y + " ---- " + diff + " " + mesh.bounds.max.x + " " + xi + " " + yi);
+            // print(xi + " " + yi);
+            previousMaxY = maxPosition.y;
             SetIndex(output, xi, yi, new Vector4(maxPosition.x, maxPosition.y, maxPosition.z, maxIndex));
             vertices[maxIndex] = new Vector3(float.NegativeInfinity,float.NegativeInfinity,float.NegativeInfinity);
             numAdded++;

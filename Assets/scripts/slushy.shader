@@ -1,4 +1,4 @@
-    Shader "Unlit/slushy"
+﻿Shader "Unlit/slushy"
 {
     Properties
     {
@@ -23,18 +23,28 @@
         _ImprintTexture ("Imprint Texture", 2D) = "white" {}
         _MeshDimensions ("Mesh Dimensions", Vector) = (0.0,0.0,0.0,0.0)
         _TextureDimensions ("Texture Dimensions", Vector) = (0.0,0.0,0.0,0.0)
+
+        _Tess ("Tessellation", Range(1,32)) = 4
+
+        _Displacement ("Displacement", Range(0, 1.0)) = 0.3
+
+        _DispTex ("Disp Texture", 2D) = "gray" {}
     }
     SubShader
     {
-        Tags { "LightMode"="ForwardBase" }
+        Tags { "RenderType"="Opaque" "LightMode"="ForwardBase" }
         LOD 300
-
+            
         Pass
         {
             CGPROGRAM
+
             #pragma vertex vert
             #pragma fragment frag
+            #pragma tessellate:tessFixed
 
+            #pragma target 5.0
+            
             #include "UnityCG.cginc"
             #include "AutoLight.cginc"
             #include "UnityLightingCommon.cginc"
@@ -83,7 +93,19 @@
             uniform float4 _MeshDimensions;
             uniform float4 _TextureDimensions;
 
-            float3 getNormal(float4 step, float2 uv, sampler2D heightMap, float size){
+            uniform float _Tess;
+
+            sampler2D _DispTex;
+            float4 _DispTex_ST;
+            float _Displacement;
+
+            float4 tessFixed()
+            {
+                return _Tess;
+            }
+
+            float3 getNormal(float4 step, float2 uv, sampler2D heightMap, float size)
+            {
                 float this = tex2Dlod (heightMap, float4(float2(uv.x, uv.y),0,0)).r * size;
                 float botLeft = tex2Dlod (heightMap, float4(float2(uv.x - step.x, uv.y - step.z),0,0)).r * size;
                 float botRight = tex2Dlod (heightMap, float4(float2(uv.x + step.x, uv.y - step.z),0,0)).r * size;
@@ -109,13 +131,18 @@
                 return ((norm1 + norm2 + norm3 + norm4) / 4.0);
             };
 
+
             v2f vert (appdata_tan v)
             {
                 v2f o;
 
                 o.uv2 = TRANSFORM_TEX(v.texcoord, _ImprintTexture);
                 float4 height = tex2Dlod (_ImprintTexture, float4(float2(o.uv2.x, o.uv2.y),0,0));
-                v.vertex.z -= height.r/7000.0;
+                v.vertex.xyz -= v.normal * height.r/1000.0;
+
+                o.uv2 = TRANSFORM_TEX(v.texcoord, _DispTex);
+                height = tex2Dlod (_DispTex, float4(float2(o.uv2.x, o.uv2.y),0,0));
+                v.vertex.xyz += v.normal * height.r * _Displacement;
 
                 float4 step = 0.01;//(_MeshDimensions) / _TextureDimensions;
                 float3 norm = normalize(getNormal(step, o.uv2, _ImprintTexture, 0.01));
@@ -166,7 +193,7 @@
                 float specIntensity = saturate(pow(NdotH, _Glossiness * _Glossiness));
 
                 float rimDot = clamp((1.0 - dot(normalize(i.viewDir), normalize(i.wNormal))),-50.0,50.0);
-                float rim = pow(rimDot,_RimAmount);
+                float rim = pow(rimDot, _RimAmount);
 
                 float3 FragToLight = lightDir;
 
@@ -182,6 +209,7 @@
                 float4 imprint = tex2D(_ImprintTexture, i.uv2);
 
                 float4 shading = _AmbientAmount * _AmbientColor + _LightColor0 * backLighting * _Color + _Color * NdotL + specIntensity * _SpecularColor + rim * _RimColor;
+                
 
                 // shading += _UnderColor * i.customerDat.r;
                 return shading;// - imprint*2.0;
