@@ -1,4 +1,4 @@
-﻿    Shader "Unlit/slushy"
+    Shader "Unlit/slushy"
 {
     Properties
     {
@@ -42,21 +42,21 @@
             struct appdata
             {
                 float4 vertex : POSITION;
-                float2 uv : TEXCOORD0;
+                float2 uv     : TEXCOORD0;
                 float3 normal : NORMAL;
             };
 
             struct v2f
             {
-                float2 uv : TEXCOORD0;
-                float4 vertex : SV_POSITION;
-                float3 wNormal : NORMAL;
-                float3 wpos : TEXCOORD1;
-                float3 viewDir : TEXCOORD2;
-                half3 tspace0 : TEXCOORD3; // tangent.x, bitangent.x, normal.x
-                half3 tspace1 : TEXCOORD4; // tangent.y, bitangent.y, normal.y
-                half3 tspace2 : TEXCOORD5; // tangent.z, bitangent.z, normal.z
-                float2 uv2 : TEXCOORD6;
+                float2 uv          : TEXCOORD0;
+                float4 vertex      : SV_POSITION;
+                float3 wNormal     : NORMAL;
+                float3 wpos        : TEXCOORD1;
+                float3 viewDir     : TEXCOORD2;
+                half3 tspace0      : TEXCOORD3; // tangent.x, bitangent.x, normal.x
+                half3 tspace1      : TEXCOORD4; // tangent.y, bitangent.y, normal.y
+                half3 tspace2      : TEXCOORD5; // tangent.z, bitangent.z, normal.z
+                float2 uv2         : TEXCOORD6;
                 float3 customerDat : TEXCOORD7;
             };
 
