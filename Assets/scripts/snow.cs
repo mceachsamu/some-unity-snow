@@ -12,11 +12,17 @@ public class snow : MonoBehaviour
 
     public Texture2D drawTexture;
 
+    public GameObject player;
+
     public int textureSizeMultiplier = 1;
 
-    // Start is called before the first frame update
     void Start()
     {
+        
+        print(drawTexture.width + " " +  drawTexture.height);
+        TextureScale.Bilinear(drawTexture, 100, 100);
+        print(drawTexture.width + " " +  drawTexture.height);
+
         List<Vector3> verts = new List<Vector3>();
         Mesh m = this.GetComponent<MeshFilter>().mesh;
 
@@ -35,8 +41,6 @@ public class snow : MonoBehaviour
             }
         }
         imprint.Apply();
-
-        LoadMeshIntoMatrix(m);
 
         this.GetComponent<Renderer>().material.SetVector("_MeshDimensions", max);
         this.GetComponent<Renderer>().material.SetVector("_TextureDimensions", new Vector3(imprint.width, imprint.height, imprint.height));
@@ -76,8 +80,6 @@ public class snow : MonoBehaviour
                 xi++;
                 yi=0;
             }
-            print(maxPosition.x + " " + maxPosition.y + " ---- " + diff + " " + mesh.bounds.max.x + " " + xi + " " + yi);
-            // print(xi + " " + yi);
             previousMaxY = maxPosition.y;
             SetIndex(output, xi, yi, new Vector4(maxPosition.x, maxPosition.y, maxPosition.z, maxIndex));
             vertices[maxIndex] = new Vector3(float.NegativeInfinity,float.NegativeInfinity,float.NegativeInfinity);
@@ -108,6 +110,7 @@ public class snow : MonoBehaviour
     void Update()
     {
         this.GetComponent<Renderer>().material.SetTexture("_ImprintTexture", imprint);
+        this.AddImprint(player.transform.position);
     }
 
     private Vector2 GetTexturePositionFromWorldPosition(Vector3 position)
