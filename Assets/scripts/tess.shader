@@ -6,7 +6,7 @@
         _MainTex ("Base (RGB)", 2D) = "white" {}
         _DispTex ("Disp Texture", 2D) = "gray" {}
         _NormalMap ("Normalmap", 2D) = "bump" {}
-        _Displacement ("Displacement", Range(0.001, 0.0001)) = 0.001
+        _Displacement ("Displacement", Range(0.0005, 0.00001)) = 0.001
         _Color ("Color", color) = (1,1,1,0)
         _SpecColor ("Spec color", color) = (0.5,0.5,0.5,0.5)
         _SpecularColor ("Specular color", color) = (0.5,0.5,0.5,0.5)
@@ -19,6 +19,11 @@
         _TextureFrequency("texture frequency", Range(0.0,20.0)) = 1.0
 
         _ImprintTexture ("Imprint Texture", 2D) = "white" {}
+
+        _BackLightNormalStrength("backlighting normal strength",  Range(0.0,1.0)) = 0.5
+        _BackLightPower("backlighting power",  Range(0.0,10.0)) = 1.0
+        _BackLightStrength("backlighting strength",  Range(0.0,10.0)) = 1.0
+        _BacklightColor("backlight Color", Color) = (0.0,0.0,0.0,0.0)
     }
     SubShader {
         Tags { "RenderType"="Opaque" }
@@ -42,7 +47,7 @@
 
         float4 tessDistance (appdata v0, appdata v1, appdata v2) {
             float minDist = 15.0;
-            float maxDist = 50.0;
+            float maxDist = 100.0;
             return UnityDistanceBasedTess(v0.vertex, v1.vertex, v2.vertex, minDist, maxDist, _Tess);
         }
 
@@ -83,9 +88,9 @@
         {
             float4 height = tex2Dlod (_ImprintTexture, float4(v.texcoord.xy,0,0));
             v.vertex.xyz -= v.normal * height.r*_Displacement;
-            // v.vertex.xyz += (v.normal *_Displacement)/2.0;
-            float4 step = 0.01;//(_MeshDimensions) / _TextureDimensions;
-            float3 norm = normalize(getNormal(step, v.texcoord.xy, _ImprintTexture, 0.01));
+            v.vertex.xyz += (v.normal *_Displacement)/1.0;
+            float4 step = 0.002;//(_MeshDimensions) / _TextureDimensions;
+            float3 norm = normalize(getNormal(step, v.texcoord.xy, _ImprintTexture, 0.005));
             v.normal = (v.normal + norm)/2.0;
         }
         
@@ -93,13 +98,15 @@
         struct Input {
             float2 uv_MainTex;
             float3 worldNormal; INTERNAL_DATA
+            float3 worldPos;
         };
 
 
         struct SurfaceOutputT
         {
             fixed3 Albedo;  // diffuse color
-            fixed3 Normal;  // tangent space normal, if written
+            fixed3 Normal;  // world normal, if written
+            fixed3 Position;  // world position, if written
             fixed3 Emission;
             fixed3 Ambience;
             half Specular;  // specular power in 0..1 range
@@ -118,6 +125,11 @@
 
         uniform float _NormalMapStrength;
         uniform float _TextureFrequency;
+        
+        uniform float _BackLightNormalStrength;
+        uniform float _BackLightPower;
+        uniform float _BackLightStrength;
+        uniform fixed4 _BacklightColor;
 
         inline half4 LightingSorbet (SurfaceOutputT s, half3 viewDir, UnityGI gi) {
             float3 lightDir = normalize(_WorldSpaceLightPos0.xyz);
@@ -130,7 +142,9 @@
             float rimDot = clamp((1.0 - dot(normalize(viewDir), normalize(s.Normal))),-50.0,50.0);
             float rim = pow(rimDot, _RimAmount);
 
-            return _AmbientColor + rim * _RimColor + specIntensity * _SpecularColor + NdotL * _Color;
+            float backLighting = pow(saturate(dot(viewDir, (-1.0 * lightDir + s.Normal * _BackLightNormalStrength))), _BackLightPower) * _BackLightStrength;
+
+            return _AmbientColor + rim * _RimColor + specIntensity * _SpecularColor + NdotL * _Color + backLighting * _BacklightColor;
         }
 
         inline void LightingSorbet_GI (SurfaceOutputT s, UnityGIInput data, inout UnityGI gi){
@@ -145,6 +159,7 @@
             float3 nmNormal = UnpackNormal(tex2D(_NormalMap, IN.uv_MainTex * _TextureFrequency));
             WorldNormalVector (IN, o.Normal);
             o.Normal += nmNormal * _NormalMapStrength;
+            o.Position = IN.worldPos;
         }
         ENDCG
     }

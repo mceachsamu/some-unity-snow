@@ -20,7 +20,7 @@ public class cameraScript : MonoBehaviour
     void Update()
     {
         Vector3 newPosition = player.transform.position;
-        newPosition.y += height;
+        newPosition -= height * this.transform.forward;
         this.transform.position = newPosition;
     }
 }
