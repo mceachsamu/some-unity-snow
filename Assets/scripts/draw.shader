@@ -44,7 +44,7 @@
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-                float draw  = pow(saturate(1 - length(i.uv - _Coordinate)), 1500);
+                float draw  = pow(saturate(1 - length(i.uv - _Coordinate)), 1800);
                 fixed4 drawCol = _Color * (draw);
                 return saturate(col + drawCol);
             }

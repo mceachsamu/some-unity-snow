@@ -8,6 +8,8 @@ public class boardScript : MonoBehaviour
 
     public GameObject dummy;
 
+    public float displacement = 0.1f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +30,6 @@ public class boardScript : MonoBehaviour
         this.GetComponent<Rigidbody>().MoveRotation(dummy.transform.rotation);
         
 
-        this.transform.position -= direction * 0.1f;
+        this.transform.position -= direction * displacement;
     }
 }

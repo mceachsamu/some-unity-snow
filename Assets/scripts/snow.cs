@@ -29,7 +29,7 @@ public class snow : MonoBehaviour
         Material mat = Instantiate(this.GetComponent<Renderer>().material);
         this.GetComponent<Renderer>().material = mat;
 
-        imprint = new RenderTexture(600,600, 0, RenderTextureFormat.ARGBFloat);
+        imprint = new RenderTexture(800,800, 0, RenderTextureFormat.ARGBFloat);
 
         this.GetComponent<Renderer>().material.SetTexture("_ImprintTexture", imprint);
     }
@@ -39,6 +39,9 @@ public class snow : MonoBehaviour
     {
             if (Physics.Raycast(player.transform.position, -Vector3.up, out hit, 1.5f)) {
                 imprintMat.SetVector("_Coordinate", new Vector2(hit.textureCoord.x, hit.textureCoord.y));
+                player.GetComponent<playerScript>().setColliding(true);
+            } else {
+                player.GetComponent<playerScript>().setColliding(false);
             }
 
             RenderTexture temp = RenderTexture.GetTemporary(imprint.width, imprint.height, 0, RenderTextureFormat.ARGBFloat);
