@@ -20,6 +20,8 @@ public class snow : MonoBehaviour
     private Material imprintMat;
     private RaycastHit hit;
 
+    public float rayDistance = 1.5f;
+
     void Start() {
         
         imprintMat = new Material(drawShader);
@@ -37,8 +39,10 @@ public class snow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-            if (Physics.Raycast(player.transform.position, -Vector3.up, out hit, 1.5f)) {
+            if (Physics.Raycast(player.transform.position, -Vector3.up, out hit, rayDistance)) {
+                print((hit.distance / rayDistance));
                 imprintMat.SetVector("_Coordinate", new Vector2(hit.textureCoord.x, hit.textureCoord.y));
+                imprintMat.SetFloat("_Strength", 1.0f - (hit.distance / rayDistance));
                 player.GetComponent<playerScript>().setColliding(true);
             } else {
                 player.GetComponent<playerScript>().setColliding(false);
