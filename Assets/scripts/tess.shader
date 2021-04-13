@@ -47,7 +47,7 @@
 
         float4 tessDistance (appdata v0, appdata v1, appdata v2) {
             float minDist = 15.0;
-            float maxDist = 100.0;
+            float maxDist = 170.0;
             return UnityDistanceBasedTess(v0.vertex, v1.vertex, v2.vertex, minDist, maxDist, _Tess);
         }
 
